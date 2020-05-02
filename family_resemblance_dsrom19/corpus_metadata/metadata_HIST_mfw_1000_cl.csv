@@ -1,0 +1,41 @@
+idno,author-short,title-short,author-long,title-long,year,decade,country,source-edition,narrative-perspective,subgenre-theme,subgenre-current,cluster
+nh0004,PayroR,Inca,"Payró, Roberto",El falso Inca,1905,1901-1910,Argentina,historical,heterodiegetic,novela histórica,unknown,0
+nh0007,AltamiranoIM,Zarco,"Altamirano, Ignacio Manuel",El Zarco,1901,1901-1910,Mexico,modern,heterodiegetic,novela histórica,novela romántica,1
+nh0015,SaladoAlvarezV,Puebla,"Salado Álvarez, Victoriano",Puebla,1903,1901-1910,Mexico,first,heterodiegetic,novela histórica,novela realista,1
+nh0017,MarmolJ,Amalia,"Mármol, José",Amalia,1855,1851-1860,Argentina,unknown,heterodiegetic,novela histórica,novela romántica,2
+nh0022,FriasH,Tomochic,"Frías, Heriberto",Tomóchic,1894,1891-1900,Mexico,first,heterodiegetic,novela histórica,novela naturalista,3
+nh0025,MansillaE,Miranda,"Mansilla, Eduarda",Lucía Miranda,1860,1851-1860,Argentina,historical,heterodiegetic,novela histórica,novela romántica,0
+nh0026,AnconaE,Cruz,"Ancona, Eligio",La cruz y la espada,1866,1861-1870,Mexico,modern,heterodiegetic,novela histórica,novela romántica,0
+nh0035,LopezVF,NoviaDelHereje,"López, Vicente Fidel",La novia del hereje o La Inquisición de Lima,1855,1851-1860,Argentina,historical,heterodiegetic,novela histórica,novela romántica,1
+nh0040,GutierrezJM,CapitanPatricios,"Gutiérrez, Juan María",El capitán de patricios,1864,1861-1870,Argentina,modern,heterodiegetic,novela histórica,novela romántica,3
+nh0041,GorritiJM,Yocci,"Gorriti, Juana Manuela",El pozo del Yocci,1876,1871-1880,Argentina,modern,heterodiegetic,novela histórica,novela romántica,0
+nh0054,GutierrezE,Chacho,"Gutiérrez, Eduardo",El Chacho,1884,1881-1890,Argentina,historical,heterodiegetic,novela histórica,novela romántica,1
+nh0064,DiazCovarrubiasJ,Gomez,"Díaz Covarrubias, Juan","Gil Gómez, el insurgente o la hija del médico",1858,1851-1860,Mexico,historical,heterodiegetic,novela histórica,novela romántica,1
+nh0069,MateosJA,CerroCampanas,"Mateos, Juan Antonio",El cerro de las campanas,1868,1861-1870,Mexico,historical,heterodiegetic,novela histórica,novela romántica,0
+nh0081,BungeCO,Sangre,"Bunge, Carlos Octavio",La Novela de la Sangre,1903,1901-1910,Argentina,historical,heterodiegetic,novela histórica,unknown,0
+nh0084,LarretaE,GloriaRamiro,"Larreta, Enrique",La gloria de Don Ramiro,1908,1901-1910,Argentina,modern,heterodiegetic,novela histórica,novela modernista,3
+nh0086,LugonesL,Guerra,"Lugones, Leopoldo",La guerra gaucha,1905,1901-1910,Argentina,unknown,heterodiegetic,novela histórica,novela modernista,3
+nh0091,CalcagnoF,DonEnriquito,"Calcagno, Francisco",Don Enriquito,1895,1891-1900,Cuba,first,heterodiegetic,novela histórica,unknown,1
+nh0094,MansoJP,MisteriosPlata,"Manso de Noronha, Juana Paula",Los misterios del Plata,1868,1861-1870,Argentina,modern,heterodiegetic,novela histórica,novela romántica,0
+nh0100,PortilloA,MariaLuisa,"Portillo, Andrés",María Luisa,1896,1891-1900,Mexico,first,heterodiegetic,novela histórica,unknown,0
+nh0103,ZamacoisN,MendigoSanAngel,"Zamacois, Niceto de",El mendigo de San Ángel,1865,1861-1870,Mexico,first,heterodiegetic,novela histórica,unknown,1
+nh0106,SierraOReillyJ,HijaJudio,"Sierra O'Reilly, Justo",La hija del judío,1849,1840-1850,Mexico,modern,heterodiegetic,novela histórica,novela romántica,2
+nh0108,InclanLG,Astucia,"Inclán, Luis Gonzaga",Astucia,1866,1861-1870,Mexico,modern,heterodiegetic,novela histórica,novela romántica,1
+nh0115,GomezAvellanedaG,Guatimozin,"Gómez de Avellaneda, Gertrudis","Guatimozín, último emperador de Méjico",1846,1840-1850,Cuba,historical,heterodiegetic,novela histórica,novela romántica,0
+nh0125,RivaPalacioV,Calvario,"Riva Palacio, Vicente",Calvario y Tabor,1868,1861-1870,Mexico,historical,heterodiegetic,novela histórica,novela romántica,2
+nh0139,RoblesP,Plateados,"Robles, Pedro",Los plateados de Tierra Caliente,1891,1891-1900,Mexico,unknown,heterodiegetic,novela histórica,unknown,1
+nh0142,OlavarriaFerrariE,TalamoHorca,"Olavarría y Ferrari, Enrique",El tálamo y la horca,1868,1861-1870,Mexico,first,heterodiegetic,novela histórica,novela romántica,2
+nh0150,LarrosaAnsaldoL,Esposos,"Larrosa de Ansaldo, Lola",Los esposos,1893,1891-1900,Argentina,first,heterodiegetic,novela histórica,novela romántica,2
+nh0152,PazI,Juarez,"Paz, Ireneo",Juárez,1904,1901-1910,Mexico,first,heterodiegetic,novela histórica,novela romántica,1
+nh0158,EchaizJ,Paladin,"Echáiz, Jesús",El paladín extranjero,1871,1871-1880,Mexico,first,heterodiegetic,novela histórica,novela romántica,0
+nh0160,BarredaR,PepaLarrica,"Barreda, Rafael",Pepa Larrica,1884,1881-1890,Argentina,first,heterodiegetic,novela histórica,unknown,1
+nh0166,BacardiMoreauE,ViaCrucis,"Bacardí Moreau, Emilio",Vía Crucis,1910,1901-1910,Cuba,modern,heterodiegetic,novela histórica,unknown,0
+nh0169,VillaverdeC,Penitente,"Villaverde, Cirilo",El penitente,1889,1881-1890,Cuba,historical,homodiegetic,novela histórica,novela romántica,2
+nh0176,OlascoagaMJ,SargentoClaro,"Olascoaga, Manuel J.","El sargento Claro, o la guerra de Chile",1898,1891-1900,Argentina,first,heterodiegetic,novela histórica,unknown,0
+nh0184,AlmazanJP,HerejeMusulman,"Almazán, José Pascual",Un hereje y un musulmán,1870,1861-1870,Mexico,modern,heterodiegetic,novela histórica,unknown,0
+nh0208,SanchezMarmolM,AntonPerez,"Sánchez Mármol, Manuel",Antón Pérez,1903,1901-1910,Mexico,modern,heterodiegetic,novela histórica,novela realista,2
+nh0210,ZayasEnriquezR,Teniente,"Zayas Enríquez, Rafael de",El teniente de los gavilanes,1902,1901-1910,Mexico,modern,heterodiegetic,novela histórica,novela realista,1
+nh0231,IglesiaA,PepeAntonio,"Iglesia, Álvaro de la",Pepe Antonio,1903,1901-1910,Cuba,first,heterodiegetic,novela histórica,unknown,3
+nh0243,MarquezJ,HermanosSilencio,"Márquez, José de Jesús",Los Hermanos del Silencio,1896,1891-1900,Cuba,first,heterodiegetic,novela histórica,unknown,0
+nh0247,CabralJV,AmeliaFloriani,"Cabral, José Victoriano",Amelia de Floriani o el castillo del diablo,1887,1881-1890,Argentina,first,heterodiegetic,novela histórica,novela romántica,1
+nh0253,CuellarJT,PecadoSiglo,"Cuéllar, José Tomás de",El pecado del siglo,1869,1861-1870,Mexico,first,heterodiegetic,novela histórica,novela romántica,2

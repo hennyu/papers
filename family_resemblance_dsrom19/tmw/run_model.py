@@ -13,7 +13,7 @@ from os.path import join
 
 
 ### Set the general working directory.
-wdir = "/home/ulrike/Git/hennyu/novelashispanoamericanas/corpus"
+wdir = "/home/ulrike/Git/papers/family_resemblance_dsrom19/"
 
 
 ### Shared parameters
@@ -21,11 +21,11 @@ MalletPath = "/home/ulrike/Programme/mallet-2.0.8RC3/bin/mallet"
 #MalletPath = "/media/christof/data/repos/other/Mallet/bin/mallet" # doesn't work right now.
 TextFolder = join(wdir, "topicmodel", "corpus_segs")
 MalletFolder = join(wdir, "topicmodel", "mallet") 
-CorpusFile = join(MalletFolder, "nh.mallet")
+CorpusFile = join(MalletFolder, "novelas.mallet")
 
 
 ### Import parameters (call_mallet_import)
-StoplistProject = join(wdir, "topicmodel", "stopwords.txt")
+StoplistProject = join(wdir, "features/", "topics_stopwords.txt")
 model.call_mallet_import(MalletPath, TextFolder, MalletFolder, CorpusFile, StoplistProject)
 
 

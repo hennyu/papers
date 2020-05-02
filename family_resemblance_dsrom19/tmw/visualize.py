@@ -117,7 +117,7 @@ def crop_images(inpath, outfolder, left, upper, right, lower):
 # plot_topTopics                #
 #################################
 
-# TODO: Move this one one level up if several plotting functions use it.
+# TODO: Move this one level up if several plotting functions use it.
 def get_firstWords(firstWordsFile):
     """Function to load list of top topic words into dataframe."""
     #print("  Getting firstWords.")
@@ -180,7 +180,7 @@ def create_barchart_topTopics(dataToPlot, targetCategory, mode, item,
     dataToPlot.plot(kind="bar", legend=None, color="#003399") 
     plt.setp(plt.xticks()[1], rotation=90, fontsize = 11)   
     if mode == "normalized": 
-        plt.title("Top-distinctive Topics für: "+str(item), fontsize=15)
+        plt.title("Top distinctive topics for: "+str(item), fontsize=15)
         plt.ylabel("normalized scores", fontsize=13)
     elif mode == "absolute":
         plt.title("Top-wichtigste Topics für: "+str(item), fontsize=15)
@@ -329,7 +329,7 @@ def get_heatmap_dataToPlot(average, mode, sorting, firstWordsFile, topTopicsShow
         allstd = allScores.std(axis=0) #std for entire df
         if mode == "meannorm": # mean normalization
             allScores = allScores - colmeans
-        if mode == "mediannorm": # mean normalization
+        if mode == "mediannorm": # median normalization
             allScores = allScores - colmedians
         if mode == "zscores": # zscore transformation
             allScores = (allScores - colmeans) / allstd # = zscore transf.

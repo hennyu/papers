@@ -8,7 +8,7 @@ import prepare
 from os.path import join
 
 ### Set the general working directory.
-wdir = "/home/ulrike/Git/hennyu/novelashispanoamericanas/corpus"
+wdir = "/home/ulrike/Git/papers/family_resemblance_dsrom19/"
 
 
 ### segmenter
@@ -29,7 +29,7 @@ binsnb = 5
 
 ### call_treetagger
 ### Perform lemmatization and POS tagging.
-infolder = join(wdir, "txt")
+infolder = join(wdir, "txt_full")
 outfolder = join(wdir, "topicmodel/corpus_tagged")
 tagger = "/home/ulrike/Programme/tree-tagger-linux-3.2.1/cmd/tree-tagger-spanish"
 #prepare.call_treetagger(infolder, outfolder, tagger) 
@@ -39,7 +39,7 @@ tagger = "/home/ulrike/Programme/tree-tagger-linux-3.2.1/cmd/tree-tagger-spanish
 inpath = join(wdir, "topicmodel/corpus_tagged", "*.trt")
 outfolder = join(wdir, "topicmodel/corpus_lemmata_N")
 mode = "esN"
-stoplist_errors = join(wdir, "topicmodel/stopwords.txt") # in tmw folder
+stoplist_errors = join(wdir, "features/topics_stopwords.txt") # in tmw folder
 #prepare.make_lemmatext(inpath, outfolder, mode, stoplist_errors)
 
 

@@ -9,6 +9,7 @@ Submodule to create a bow representation of a collection of texts.
 """
 
 from os.path import join
+from os import listdir
 import pandas as pd
 import numpy as np
 import glob
@@ -20,6 +21,8 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 # see also http://scikit-learn.org/stable/modules/generated/sklearn.feature_extraction.text.TfidfVectorizer and 
 # http://scikit-learn.org/stable/modules/generated/sklearn.feature_extraction.text.TfidfTransformer
 # Apply Term Frequency Inverse Document Frequency normalization to a sparse matrix of occurrence counts
+from nltk.probability import FreqDist
+from nltk.corpus import PlaintextCorpusReader
 
 
 def create_bow_model(wdir, corpusdir, outfile, **kwargs):
@@ -130,4 +133,83 @@ def create_bow_model(wdir, corpusdir, outfile, **kwargs):
 	print("Number of tokens: ", bow.sum())
 	
 	
-create_bow_model("/home/ulrike/Git/conha19/", "txt", "mfw_1000_tfidf_full.csv", mfw=1000, mode="tf-idf", vocab_file=True, stopword_file="mfw_stopwords.txt")
+	
+	
+def corpus_to_lower(wdir, corpus_dir, outdir):
+	"""
+	Convert a full text corpus to lower case.
+	
+	Arguments:
+	wdir (str): path to the workind directory
+	corpus_dir (str): relative path to the full text corpus directory
+	outdir (str): relative path to the output directory
+	"""
+	
+
+	for filename in listdir(join(wdir, corpus_dir)):
+		if filename.endswith(".txt"):
+			
+			print("doing " + filename + "...")
+			
+			with open(join(wdir, corpus_dir, filename), 'r', encoding="UTF-8") as infile:
+				text = infile.read()
+			
+				with open(join(wdir, outdir, filename), 'w', encoding="UTF-8") as outfile:
+					outfile.write(text.lower())	
+	
+	print("Done")
+	
+	
+	
+	
+	
+def get_mfw_ranks(wdir, feat_matrix, corpus_path, outfile):
+	"""
+	Get the ranks of the MFW listed in the BOW feature matrix and store them in a CSV file.
+	
+	(It does not seem possible to get this information directly from the Vectorizer, so I use NLTK in parallel to get the information.)
+	
+	Arguments:
+	wdir (str): path to the working directory
+	feat_matrix (str): relative path to the feature matrix file
+	corpus_path (str): relative path to the full text corpus
+	outfile (str): relative path to the output file (the mfw ranking)
+	"""
+	
+	# apparently the CorpusReader is not able to convert the texts to lower case, so the corpus has to be prepared for that beforehand
+	corpus = PlaintextCorpusReader(join(wdir, corpus_path), ".*")
+	print("words in the corpus: " + str(len(corpus.words())))
+	# calculate the frequency distribution of the words in the corpus
+	fdist_corpus = FreqDist(corpus.words())
+	
+	
+	# get the list of mfw from the BOW feature matrix
+	feat = pd.read_csv(join(wdir, feat_matrix), index_col=0)
+	mfw = list(feat.columns)
+	
+	# set up a frame for the words and ranks
+	freq_frame = pd.DataFrame(index=mfw, columns=["rank", "frequency"])
+	freq_frame.index.name = "word"
+	
+	# add the frequencies of the mfw to the rank frame
+	for word in mfw:
+		freq_frame.loc[word,"frequency"] = fdist_corpus[word]
+	
+	# sort the frame and add the ranks
+	freq_frame=freq_frame.sort_values("frequency", ascending=False)
+	num_mfw = len(mfw)
+	ranks = range(1, num_mfw + 1)
+	freq_frame["rank"] = ranks
+	
+	# save as CSV file
+	freq_frame.to_csv(join(wdir, outfile))
+	
+	print("Done")
+	
+	
+#create_bow_model("/home/ulrike/Git/papers/family_resemblance_dsrom19/", "texts/txt_full", "features/mfw_1000_tfidf_full.csv", mfw=1000, mode="tf-idf", vocab_file=True, stopword_file="features/mfw_stopwords.txt")
+
+#corpus_to_lower("/home/ulrike/Git/papers/family_resemblance_dsrom19/", "texts/txt_full/", "texts/txt_full_lower")
+
+get_mfw_ranks("/home/ulrike/Git/papers/family_resemblance_dsrom19/", "features/mfw_1000_tfidf_full.csv", "texts/txt_full_lower/", "features/mfw_ranks.csv")
+

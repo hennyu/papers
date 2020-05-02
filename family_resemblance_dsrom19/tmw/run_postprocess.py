@@ -9,7 +9,7 @@ import postprocess
 from os.path import join
 
 ### Set the general working directory.
-wdir = "/home/ulrike/Git/hennyu/novelashispanoamericanas/corpus"
+wdir = "/home/ulrike/Git/papers/family_resemblance_dsrom19/"
 
 ### Set parameters as used in the topic model
 NumTopics = 100
@@ -22,7 +22,7 @@ param_settings = str(NumTopics) + "tp-" + str(NumIterations) + "it-" + str(Optim
 corpuspath = join(wdir, "topicmodel", "corpus_segs", "*.txt")
 outfolder = join(wdir, "topicmodel", "aggregates", param_settings)
 mastermatrixfile = "mastermatrix.csv"
-metadatafile = join(wdir, "topicmodel", "metadata.csv")
+metadatafile = join(wdir, "corpus_metadata", "metadata_for_tm.csv")
 topics_in_texts = join(wdir, "topicmodel", "mallet", "topics-in-texts_" + param_settings + ".csv")
 number_of_topics = NumTopics
 useBins = False
@@ -35,7 +35,7 @@ postprocess.create_mastermatrix(corpuspath, outfolder, mastermatrixfile, metadat
 mastermatrixfile = join(wdir, "topicmodel", "aggregates", param_settings, "mastermatrix.csv")
 outfolder = join(wdir, "topicmodel", "aggregates", param_settings)
 # targets: one or several:author|decade|subgenre|author-gender|idno|segmentID|narration|narrative-perspective (according to available metadata)
-targets = ["idno", "text.genre.subgenre.summary"]
+targets = ["idno"]
 postprocess.calculate_averageTopicScores(mastermatrixfile, targets, outfolder)
 
 ### build_gephitable
