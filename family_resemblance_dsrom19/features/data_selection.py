@@ -147,9 +147,9 @@ def copy_cluster_files(wdir, text_dir, md_file, stylo_folder, cluster_1, cluster
 	
 	
 wdir = "/home/ulrike/Git/papers/family_resemblance_dsrom19/"
-select_entries(wdir, "corpus_metadata/metadata.csv", "features/mfw_1000_tfidf_full.csv", "features/mfw_1000_tfidf.csv")
-select_entries(wdir, "corpus_metadata/metadata_SENT.csv", "features/mfw_1000_tfidf_full.csv", "features/mfw_1000_tfidf_SENT.csv")
-select_entries(wdir, "corpus_metadata/metadata_HIST.csv", "features/mfw_1000_tfidf_full.csv", "features/mfw_1000_tfidf_HIST.csv")
+#select_entries(wdir, "corpus_metadata/metadata.csv", "features/mfw_1000_tfidf_full.csv", "features/mfw_1000_tfidf.csv")
+#select_entries(wdir, "corpus_metadata/metadata_SENT.csv", "features/mfw_1000_tfidf_full.csv", "features/mfw_1000_tfidf_SENT.csv")
+#select_entries(wdir, "corpus_metadata/metadata_HIST.csv", "features/mfw_1000_tfidf_full.csv", "features/mfw_1000_tfidf_HIST.csv")
 
 #select_entries(wdir, "corpus_metadata/metadata.csv", "features/avgtopicscores_by-idno_full.csv", "features/avgtopicscores_by-idno.csv")
 #select_entries(wdir, "corpus_metadata/metadata_SENT.csv", "features/avgtopicscores_by-idno_full.csv", "features/avgtopicscores_by-idno_SENT.csv")
@@ -158,6 +158,11 @@ select_entries(wdir, "corpus_metadata/metadata_HIST.csv", "features/mfw_1000_tfi
 #select_files(wdir, "corpus_metadata/metadata.csv", "txt_full/*.txt", "txt/")
 
 #add_cluster_info(wdir, "corpus_metadata/metadata_HIST.csv", "analysis/clusters/clusters_3nn_cosine_mfw_1000_tfidf_HIST.csv", "corpus_metadata/metadata_HIST_mfw_1000_cl.csv")
+#add_cluster_info(wdir, "corpus_metadata/metadata_HIST.csv", "analysis/clusters/clusters_3nn_cosine_topics_100_HIST.csv", "corpus_metadata/metadata_HIST_topics_100_cl.csv")
+add_cluster_info(wdir, "corpus_metadata/metadata_SENT.csv", "analysis/clusters/clusters_3nn_cosine_mfw_1000_tfidf_SENT.csv", "corpus_metadata/metadata_SENT_mfw_1000_tfidf_cl.csv")
+add_cluster_info(wdir, "corpus_metadata/metadata_SENT.csv", "analysis/clusters/clusters_3nn_cosine_topics_100_SENT.csv", "corpus_metadata/metadata_SENT_topics_100_cl.csv")
+add_cluster_info(wdir, "corpus_metadata/metadata.csv", "analysis/clusters/clusters_3nn_cosine_mfw_1000_tfidf.csv", "corpus_metadata/metadata_mfw_1000_tfidf_cl.csv")
+add_cluster_info(wdir, "corpus_metadata/metadata.csv", "analysis/clusters/clusters_3nn_cosine_topics_100.csv", "corpus_metadata/metadata_topics_100_cl.csv")
 
 #copy_cluster_files(wdir, "texts/txt_full", "corpus_metadata/metadata_HIST_mfw_1000_cl.csv", "stylo", 3, None)
 

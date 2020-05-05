@@ -22,12 +22,13 @@
     <xsl:output method="text" encoding="UTF-8"/>
     
     <xsl:template match="/">
-        <xsl:text>"idno","author-short","title-short","author-long","title-long","year","decade","country","source-edition","narrative-perspective","subgenre-theme","subgenre-current"</xsl:text><xsl:text>
+        <xsl:text>"idno","author-short","author-gender","title-short","author-long","title-long","year","decade","country","source-edition","narrative-perspective","subgenre-theme","subgenre-current"</xsl:text><xsl:text>
 </xsl:text>
         <xsl:for-each select="collection($corpus-dir)//TEI">
             <xsl:sort select=".//idno[@type='cligs']"/>
             <xsl:value-of select=".//idno[@type='cligs']"/><xsl:text>,</xsl:text>
             <xsl:value-of select=".//author/name[@type='short']"/><xsl:text>,</xsl:text>
+            <xsl:value-of select=".//term[@type='author.gender']"/><xsl:text>,</xsl:text>
             <xsl:value-of select=".//title[@type='short']"/><xsl:text>,</xsl:text>
             <xsl:text>"</xsl:text><xsl:value-of select=".//author/name[@type='full']"/><xsl:text>",</xsl:text>
             <xsl:text>"</xsl:text><xsl:value-of select=".//title[@type='main']/normalize-space(.)"/><xsl:text>",</xsl:text>

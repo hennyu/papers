@@ -17,7 +17,7 @@ import matplotlib.pyplot as plt
 import community
 
 
-def create_network(wdir, infile, mdfile, simfile, outfile_net, outfile_cl):
+def create_network(wdir, infile, mdfile, simfile, outfile_net, outfile_cl, outfile_edges):
 	"""
 	Creates a network graph.
 	
@@ -29,6 +29,7 @@ def create_network(wdir, infile, mdfile, simfile, outfile_net, outfile_cl):
 	mdfile (str): relative path to the metadata file
 	outfile_net (str): relative path to the network output file (an image file of the network)
 	outfile_cl (str): relative path to the cluster output file (which nodes belong to which cluster)
+	outfile_edges (str): relative path to the edge list output file
 	"""
 
 	print("starting: create_network...")
@@ -114,6 +115,9 @@ def create_network(wdir, infile, mdfile, simfile, outfile_net, outfile_cl):
 	vals = {"cluster" : list(vals)}
 	cluster_result = pd.DataFrame(index=idx, data=vals)
 	cluster_result.to_csv(join(wdir, outfile_cl))
+	
+	# save edge lists for later evaluation
+	nx.write_weighted_edgelist(G, join(wdir, outfile_edges))
 	
 	
 	# draw the network

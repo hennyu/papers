@@ -67,7 +67,8 @@ def visualize_top_features(wdir, md_file, feat_matrix, feat_type, num_top, outfo
 		else:
 			# normalize by topic mean
 			colmeans = feat.mean(axis=0)
-			feat_norm = feat / colmeans
+			feat_norm = feat / colmeans # mean normalization
+			#feat_norm = feat # absolute values
 			data = feat_norm.loc[idno]
 			
 			first_words = pd.read_csv(join(wdir, first_words_file), header=None, index_col=0).iloc[:,0]
@@ -87,20 +88,20 @@ def visualize_top_features(wdir, md_file, feat_matrix, feat_type, num_top, outfo
 			
 			data = data.sort_values(ascending=False)[:num_top]
 			
-		x_labels = data.index
+		x_labels = list(data.index)
 		y_data = list(data)
 		
-		titles = {"mfw": "top distinctive words", "topics": "top distinctive topics"}
-		y_titles = {"mfw":"normalized scores", "topics":"normalized scores"}
+		titles = {"mfw": "top distinctive words", "topics": "top topics"} # top distinctive topics
+		y_titles = {"mfw":"normalized scores", "topics":"topic scores"} # normalized
 		x_titles = {"mfw":"words", "topics":"topics"}
 		
 		title = titles[feat_type] + " for " + idno
 		y_title = y_titles[feat_type]
 		x_title = x_titles[feat_type]
 
-		fig = go.Figure([go.Bar(x=x_labels, y=y_data)])
-		fig.update_layout(title=title, autosize=False,width=1000,height=700,xaxis_title=x_title,yaxis_title=y_title,xaxis_tickangle=-90,font=dict(size=16),legend=dict(font=dict(size=16)))
-		fig.update_xaxes(tickfont=dict(size=16))
+		fig = go.Figure([go.Bar(x=y_data[::-1], y=x_labels[::-1], orientation="h")]) # orientation="h" for horizontal bar charts, x and y need to be changed then and the sorting reversed and label axis changed
+		fig.update_layout(title=title, autosize=False,width=1000,height=900,margin=dict(l=300),xaxis_title=y_title,yaxis_title=x_title,font=dict(size=18),legend=dict(font=dict(size=18))) #xaxis_tickangle=-90
+		fig.update_xaxes(tickfont=dict(size=18)) # automargin=True : does not seem to work very well, optional for better display: range=[0, 0.35]
 		
 		outfile_name = "topfeat_" + feat_type + "_" + idno
 		
@@ -249,9 +250,9 @@ def visualize_cluster_distinctiveness(wdir, md_file, feat_matrix, cluster_file, 
 	
 	
 	fig = go.Figure(data=go.Heatmap(z=z_values,x=x_labels,y=y_labels))
-	fig.update_layout(title=title, autosize=False,width=1000,height=800,xaxis_title="clusters",yaxis_title="features",font=dict(size=16),legend=dict(font=dict(size=16))) # vary width and height as needed
-	fig.update_xaxes(tickfont=dict(size=16))
-	fig.update_yaxes(tickfont=dict(size=14), autorange="reversed")
+	fig.update_layout(title=title, autosize=False,width=1000,height=1000,xaxis_title="clusters",yaxis_title="features",font=dict(size=20),legend=dict(font=dict(size=20))) # vary width and height as needed
+	fig.update_xaxes(tickfont=dict(size=20))
+	fig.update_yaxes(tickfont=dict(size=20), autorange="reversed")
 	
 	fig.write_html(join(wdir, outfile + "_" + norm_mode + ".html"))
 	fig.write_image(join(wdir, outfile + "_" + norm_mode + ".png"),scale=2)
@@ -292,7 +293,8 @@ def visualize_cluster_metadata(wdir, md_file, md_cat, cluster_file, outfile):
 	if md_cat == "cluster-size":
 		grouped_orig = md.groupby(catx).count()
 	else:
-		grouped_orig = md.groupby([catx, catx_groups]).count()
+		grouped_orig = md.groupby([catx, catx_groups]).count().unstack(fill_value=0).stack()
+	
 	
 	# (1) plot the cluster sizes as a simple bar chart
 	if md_cat == "cluster-size":
@@ -333,10 +335,10 @@ def visualize_cluster_metadata(wdir, md_file, md_cat, cluster_file, outfile):
 			data.append(box)
 
 		title = "Clusters by " + md_cat
-		y_title = "number of works (normalized)"
+		y_title = "years"
 		
 		fig = go.Figure(data=data)
-		fig.update_layout(title=title, autosize=False,width=1000,height=700,xaxis_title="clusters",yaxis_title=y_title,font=dict(size=16),legend=dict(font=dict(size=16)))
+		fig.update_layout(title=title, autosize=False,width=1000,height=700,xaxis_title="clusters",yaxis_title=y_title,font=dict(size=16),legend=dict(font=dict(size=16))) #margin=dict(b=200), legend=dict(y=-0.4), legend_orientation="h"
 		fig.update_xaxes(tickfont=dict(size=16))
 		fig.update_yaxes(tickfont=dict(size=16))
 
@@ -353,10 +355,10 @@ def visualize_cluster_metadata(wdir, md_file, md_cat, cluster_file, outfile):
 	
 	else:
 		# (3) in the other cases (countries, narrative-perspective, subgenre-theme) plot a grouped bar chart	
-		
-		# normalize by cluster size
 		cluster_set = sorted(set(grouped_orig.index.get_level_values(catx)))
 		grouped = grouped_orig.copy(deep=True)
+		"""
+		# normalize by cluster size
 		for cl in cluster_set:
 			# get cluster size
 			cl_size = grouped.loc(axis=0)[cl].sum()[0]
@@ -374,7 +376,7 @@ def visualize_cluster_metadata(wdir, md_file, md_cat, cluster_file, outfile):
 			
 			# apply the normalization to the frame already normalized by cluster size
 			grouped.loc(axis=0)[:,cat] = grouped.loc(axis=0)[:,cat] / cat_size
-		
+		"""
 		
 		labels = cluster_set
 		categories = sorted(set(list(grouped.index.get_level_values(catx_groups))))
@@ -385,16 +387,17 @@ def visualize_cluster_metadata(wdir, md_file, md_cat, cluster_file, outfile):
 			data_groups = list(grouped.loc(axis=0)[:,cat].iloc[:,0])
 			bar = go.Bar(name=cat, x=labels, y=data_groups)	
 			data.append(bar)
-
+		
 		fig = go.Figure(data=data)
 		
 		title = "Clusters by " + md_cat
-		y_title = "number of works (normalized)"
+		y_title = "number of works" # (normalized)
 
 	# this is the same for all the bar charts
 	# Change the bar mode
-	fig.update_layout(title=title, barmode='group', autosize=False,width=1000,height=700,xaxis_title="clusters",yaxis_title=y_title,font=dict(size=16),legend=dict(font=dict(size=16)))
-	fig.update_xaxes(tickfont=dict(size=16))
+	fig.update_layout(title=title, barmode='group', autosize=False,width=600,height=600,xaxis_title="clusters",yaxis_title=y_title,font=dict(size=18),legend_orientation="h",legend=dict(y=-0.3,font=dict(size=18))) #margin=dict(b=200)
+	fig.update_xaxes(tickfont=dict(size=18))
+	fig.update_yaxes(tickfont=dict(size=18))
 	
 	outfile_path_html = join(wdir, outfile + ".html")
 	outfile_path_png = join(wdir, outfile + ".png")
@@ -405,9 +408,99 @@ def visualize_cluster_metadata(wdir, md_file, md_cat, cluster_file, outfile):
 	print("Done")
 
 	
-
+def map_nodes_to_idnos(wdir, md_file, node_file, outfile, mode):
+	"""
+	Map network node IDs to the IDs of the novels.
+	
+	Arguments:
+	wdir (str): path to the working directory
+	md_file (str): relative path to the metadata file
+	node_file (str): relative path to the network node file
+	outfile (str): relative path to the output file
+	mode (str): type of node file, possible values: "neighbours", "edges"
+	"""
+	
+	md = pd.read_csv(join(wdir, md_file), index_col=0)
+	idno_list = list(md.index)
+	
+	if mode == "neighbours":
+		nodes = pd.read_csv(join(wdir, node_file), index_col=0)
+		nodes.index = md.index
+		nodes = nodes.applymap(lambda x : idno_list[int(x)])
+	elif mode == "edges":
+		nodes = pd.read_csv(join(wdir, node_file), header=None, sep=" ")
+		nodes.iloc[:,[0,1]] = nodes.iloc[:,[0,1]].applymap(lambda x : idno_list[int(x)])
+	
+	nodes.to_csv(join(wdir, outfile))
+	print("Done")
+	
+	
+def visualize_topic_dists(wdir, md_file, feat_matrix, rank_file, first_words_file, outfile, cl_num):
+	"""
+	Visualize the topic distributions of selected novels (from a cluster) in a line plot.
+	
+	Arguments:
+	wdir (str): path to the working directory
+	md_file (str): relative path to the metadata file which includes information about the clusters
+	feat_matrix (str): relative path to the average topic scores per novel
+	rank_file (str): relative path to the file containing information about the topic ranks
+	first_words_file (str): relative path to the file containing information about the first words of the topics
+	outfile (str): relative path to the output file, without filename extension
+	cl_num (int): which cluster to visualize
+	"""
+	
+	md = pd.read_csv(join(wdir, md_file), index_col=0)
+	feat = pd.read_csv(join(wdir, feat_matrix), index_col=0)
+	ranks = pd.read_csv(join(wdir, rank_file), index_col=0)
+	first_words = pd.read_csv(join(wdir, first_words_file), index_col=0, header=None)
+	
+	feat = feat.T
+	# add first words
+	feat["first_words"] = list(first_words.iloc[:,0])
+	feat = feat.set_index("first_words")
+	
+	# sort feat matrix by topic ranks
+	feat["ranks"] = list(ranks["Rank"])
+	feat = feat.sort_values(by="ranks")
+	feat = feat.drop(columns="ranks")
+	feat = feat.T
+	
+	# add means
+	colmeans = feat.mean(axis=0)
+	colmeans.name = "mean"
+	feat = feat.append(colmeans)
+	
+	# get idnos of novels in the cluster
+	idnos = md[md.cluster == cl_num].index
+	topic_names = feat.columns
+	
+	fig = go.Figure()
+	data_x = list(range(100))
+	# add a line for each novel
+	for idno in idnos:
+		data_y = feat.loc[idno]
+		#fig.add_trace(go.Bar(name=idno, x=data_x, y=data_y, text=topic_ids))
+		fig.add_trace(go.Scatter(mode="lines",name=idno,x=data_x,y=data_y,hovertext=topic_names))
+	# add a line for the mean
+	data_y_mean = feat.loc["mean"]
+	fig.add_trace(go.Scatter(mode="lines",name="mean",x=data_x,y=data_y_mean,hovertext="mean",line=dict(color="black",dash="dash")))
+	
+	fig.update_layout(title="topic scores for novels (cluster 3, network HIST)",autosize=False,width=1600,height=800,font=dict(size=18))
+	fig.update_xaxes(tickangle=-90)
+	fig.update_yaxes(tickangle=-90)
+	
+	outfile_path_html = join(wdir, outfile + ".html")
+	outfile_path_png = join(wdir, outfile + ".png")
+	
+	fig.write_html(outfile_path_html)
+	fig.write_image(outfile_path_png,scale=2)
+	
+	print("Done")
+	
+	
+	
 		
-
+"""
 def main(wdir, md_file, feat_matrix, outfile, **kwargs):
 	visualize_top_features(wdir, md_file, feat_matrix, outfile, **kwargs)
 
@@ -415,5 +508,8 @@ def main(wdir, md_file, feat_matrix, outfile, **kwargs):
 if __name__ == "__main__":
 	import sys
 	visualize_top_features(int(sys.argv[1]))
+"""
 
+#map_nodes_to_idnos("/home/ulrike/Git/papers/family_resemblance_dsrom19", "corpus_metadata/metadata_HIST.csv", "analysis/rankings/3nn_cosine_topics_100_HIST.csv", "analysis/rankings/3nn_cosine_topics_100_HIST_IDNOS.csv", "neighbours")
+#map_nodes_to_idnos("/home/ulrike/Git/papers/family_resemblance_dsrom19", "corpus_metadata/metadata_HIST.csv", "analysis/edges/edges_3nn_cosine_topics_100_HIST.csv", "analysis/edges/edges_3nn_cosine_topics_100_HIST_IDNOS.csv", "edges")
 
