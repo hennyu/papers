@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 """
-Calls functions from hispam modules
+Calls functions to produce "family resemblance networks" of novels.
 
 @author: Ulrike Henny-Krahmer
 """
