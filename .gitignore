@@ -1,3 +1,10 @@
 # ignore temporary files
 *.*~*
 *.pyc
+
+# ignore full texts of the novels
+original_american_romtag21/data/corpus/*
+original_american_romtag21/output/tagged/*
+original_american_romtag21/pyzeta/*
+original_american_romtag21/stylo/primary_set/*
+original_american_romtag21/stylo/secondary_set/*

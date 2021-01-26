@@ -1,0 +1,42 @@
+# The file contains words that were extracted in Burrows' Zeta test:
+# this subset lists words significantly AVOIDED by primary author(s).
+# The list can be used as an input wordlist for other methods, and for this
+# purpose it can be manually revised, edited, deleted, culled, etc.
+# You can either delete unwanted words, or mark them with "#"
+# -----------------------------------------------------------------------
+
+sólo
+usted
+ciudad
+ejército
+espíritu
+soldados
+venía
+aún
+maría
+guerra
+fondo
+armas
+general
+juan
+unos
+oficiales
+hacía
+apenas
+santa
+sabía
+allá
+jefe
+grupo
+pedro
+capitán
+fuera
+pueblo
+don
+acto
+aires
+bajo
+hacían
+oficial
+cosas
+centro
