@@ -1,0 +1,32 @@
+<html xmlns:cligs="https://cligs.hypotheses.org/ns/cligs">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><script src="https://cdn.plot.ly/plotly-latest.min.js"></script></head>
+   <body>
+      <div id="myDiv" style="width: 1000px; height: 600px;"></div><script>
+                            var trace1 = {
+                            type: "bar",
+                            name: "novela cubana",
+                            x: ["novela romántica","novela realista","novela naturalista","novela modernista","other/unknown"],
+                            y: [0.060836501901140684,0.015151515151515152,0.045454545454545455,0,0.042154566744730679]
+                            };
+                        
+                            var trace2 = {
+                            type: "bar",
+                            name: "other",
+                            x: ["novela romántica","novela realista","novela naturalista","novela modernista","other/unknown"],
+                            y: [0.939163498098859316,0.984848484848484848,0.954545454545454545,1,0.957845433255269321]
+                            };
+                        
+                        
+                        var data = [trace1,trace2];
+                        var layout = {
+                        barmode: "stack",
+                        xaxis: {title: "literary currents", tickfont: {size: 16}},
+                        yaxis: {title: "number of works", range: [0,1]},
+                        legend: {font: {size: 16}},
+                        font: {size: 16},
+                        margin: {b: 150}
+                        };
+                        Plotly.newPlot("myDiv", data, layout);
+                    </script></body>
+</html>

@@ -1,0 +1,32 @@
+<html xmlns:cligs="https://cligs.hypotheses.org/ns/cligs">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><script src="https://cdn.plot.ly/plotly-latest.min.js"></script></head>
+   <body>
+      <div id="myDiv" style="width: 1000px; height: 600px;"></div><script>
+                            var trace1 = {
+                            type: "bar",
+                            name: "novela mexicana",
+                            x: ["novela histórica","novela sentimental","novela de costumbres","novela social","novela política","other/unknown"],
+                            y: [0.203619909502262443,0.005813953488372093,0.231707317073170732,0.030927835051546392,0.04,0.025862068965517241]
+                            };
+                        
+                            var trace2 = {
+                            type: "bar",
+                            name: "other",
+                            x: ["novela histórica","novela sentimental","novela de costumbres","novela social","novela política","other/unknown"],
+                            y: [0.796380090497737557,0.994186046511627907,0.768292682926829268,0.969072164948453608,0.96,0.974137931034482759]
+                            };
+                        
+                        
+                        var data = [trace1,trace2];
+                        var layout = {
+                        barmode: "stack",
+                        xaxis: {title: "subgenres (thematic)", tickfont: {size: 16}},
+                        yaxis: {title: "number of works", range: [0,1]},
+                        legend: {font: {size: 16}},
+                        font: {size: 16},
+                        margin: {b: 150}
+                        };
+                        Plotly.newPlot("myDiv", data, layout);
+                    </script></body>
+</html>

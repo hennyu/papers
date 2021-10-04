@@ -44,7 +44,7 @@
         <!--<xsl:call-template name="plot-subgenres-novela-by-decade"/>-->
         <!--<xsl:call-template name="plot-subgenres-explicit-signals"/>-->
         <!--<xsl:call-template name="plot-subgenres-explicit-signals-corpus"/>-->
-        <!--<xsl:call-template name="plot-subgenres-identity-by-decade"/>-->
+        <xsl:call-template name="plot-subgenres-identity-by-decade"/>
         <!--<xsl:call-template name="plot-subgenres-signals"/>-->
         <!--<xsl:call-template name="plot-subgenres-signals-corpus"/>-->
         <!--<xsl:call-template name="plot-subgenres-litHist"/>-->
@@ -66,6 +66,7 @@
         
         <!--<xsl:call-template name="plot-subgenres-identity"/>-->
         <!--<xsl:call-template name="plot-subgenres-identity-bib-sources"/>-->
+        <!--<xsl:call-template name="plot-subgenres-identity-bibliography"/>-->
         <!--<xsl:call-template name="plot-subgenres-identity-corpus"/>-->
         <!--<xsl:call-template name="label-combinations-identity"/>-->
         
@@ -107,6 +108,21 @@
         <!--<xsl:call-template name="plot-novelas-originales-length"/>-->
         <!--<xsl:call-template name="plot-novelas-americanas-length"/>-->
         <!--<xsl:call-template name="plot-novelas-nacionales-length"/>-->
+        
+        <!--<xsl:call-template name="plot-novelas-originales-subgenre-theme"/>
+        <xsl:call-template name="plot-novelas-originales-subgenre-current"/>
+        
+        <xsl:call-template name="plot-novelas-americanas-subgenre-theme"/>
+        <xsl:call-template name="plot-novelas-americanas-subgenre-current"/>-->
+        
+        <!--<xsl:call-template name="plot-novelas-mexicanas-subgenre-theme"/>
+        <xsl:call-template name="plot-novelas-mexicanas-subgenre-current"/>-->
+        
+        <!--<xsl:call-template name="plot-novelas-argentinas-subgenre-theme"/>
+        <xsl:call-template name="plot-novelas-argentinas-subgenre-current"/>-->
+        
+        <!--<xsl:call-template name="plot-novelas-cubanas-subgenre-theme"/>
+        <xsl:call-template name="plot-novelas-cubanas-subgenre-current"/>-->
     </xsl:template>
     
     <!-- ########### TEMPLATES ############ -->
@@ -901,7 +917,7 @@
                         
                         var layout = {
                         grid: {rows: 2, columns: 5},
-                        legend: {orientation: "h"},
+                        legend: {orientation: "h", font: {size: 16}},
                         annotations: [
                         <xsl:for-each select="$decades">
                             {
@@ -2338,7 +2354,7 @@
                 </head>
                 <body>
                     <!-- Plotly chart will be drawn inside this DIV -->
-                    <div id="myDiv" style="width: 900px; height: 400px;"></div>
+                    <div id="myDiv" style="width: 900px; height: 420px;"></div>
                     <script>
                         var data = [{
                         <xsl:variable name="novelas-originales" select="count($corpus-works[.//term[starts-with(@type,'subgenre.summary.identity')]/normalize-space(.)='novela original'])"/>
@@ -2381,9 +2397,10 @@
                         
                         var layout = {
                         grid: {rows: 1, columns: 3},
+                        legend: {font: {size: 16}},
                         annotations: [{
                             text: "original",
-                            x: 0.1,
+                            x: 0.09,
                             y: 0.5,
                             font: {size: 18},
                             showarrow: false
@@ -2395,7 +2412,7 @@
                             showarrow: false
                             },{
                             text: "national",
-                            x: 0.9,
+                            x: 0.91,
                             y: 0.5,
                             font: {size: 18},
                             showarrow: false
@@ -2410,6 +2427,96 @@
         </xsl:result-document>
         
     </xsl:template>
+    
+    <xsl:template name="plot-subgenres-identity-bibliography">
+        <!-- creates three donut charts showing the proportions of groups of identity labels 
+        in the bibliography: 
+        - "novela original" vs. other
+        - American context vs. other
+        - Argentina, Mexico, Cuba vs. other
+        -->
+        <xsl:result-document href="{concat($output-dir,'subgenres-identity-bibliography.html')}" method="html" encoding="UTF-8">
+            <html>
+                <head>
+                    <!-- Plotly.js -->
+                    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+                </head>
+                <body>
+                    <!-- Plotly chart will be drawn inside this DIV -->
+                    <div id="myDiv" style="width: 900px; height: 420px;"></div>
+                    <script>
+                        var data = [{
+                        <xsl:variable name="novelas-originales" select="count($bibacme-works[.//term[starts-with(@type,'subgenre.summary.identity')]/normalize-space(.)='novela original'])"/>
+                        values: [<xsl:value-of select="$novelas-originales"/>, <xsl:value-of select="$num-works-bib - $novelas-originales"/>],
+                        labels: ["novela original", "other"],
+                        type: "pie",
+                        hole: 0.5,
+                        name: "Original novels",
+                        domain: {row: 0, column: 0},
+                        direction: "clockwise",
+                        legendgroup: "group1"
+                        },{
+                        <xsl:variable name="labels-American-context" select="('novela mexicana','novela cubana','novela argentina','novela americana','novela criolla','novela bonaerense','novela porteña','novela habanera','novela yucateca','novela suriana','novela tapatía','novela india','novela mixteca','novela de Tabasco','novela azteca','novela camagüeyana','novela kantabro-americana', 'novela franco-argentina')"/>
+                        <xsl:variable name="American-context" select="count($bibacme-works[.//term[starts-with(@type,'subgenre.summary.identity')]/normalize-space(.)=$labels-American-context])"/>
+                        values: [<xsl:value-of select="$American-context"/>, <xsl:value-of select="$num-works-bib - $American-context"/>],
+                        labels: ["novela americana", "other"],
+                        type: "pie",
+                        hole: 0.5,
+                        name: "American novels",
+                        domain: {row: 0, column: 1},
+                        direction: "clockwise",
+                        legendgroup: "group2"
+                        },{
+                        <xsl:variable name="labels-mexicana" select="('novela mexicana','novela yucateca','novela suriana','novela tapatía','novela mixteca','novela de Tabasco','novela azteca')"/>
+                        <xsl:variable name="labels-cubana" select="('novela cubana','novela habanera','novela camagüeyana')"/>
+                        <xsl:variable name="labels-argentina" select="('novela argentina','novela bonaerense','novela porteña','novela franco-argentina')"/>
+                        <xsl:variable name="mexicana" select="count($bibacme-works[.//term[starts-with(@type,'subgenre.summary.identity')]/normalize-space(.)=$labels-mexicana])"/>
+                        <xsl:variable name="cubana" select="count($bibacme-works[.//term[starts-with(@type,'subgenre.summary.identity')]/normalize-space(.)=$labels-cubana])"/>
+                        <xsl:variable name="argentina" select="count($bibacme-works[.//term[starts-with(@type,'subgenre.summary.identity')]/normalize-space(.)=$labels-argentina])"/>
+                        values: [<xsl:value-of select="$mexicana"/>, <xsl:value-of select="$cubana"/>, <xsl:value-of select="$argentina"/>, <xsl:value-of select="$num-works-bib - $mexicana - $cubana - $argentina"/>],
+                        labels: ["novela mexicana","novela cubana","novela argentina", "other"],
+                        type: "pie",
+                        hole: 0.5,
+                        name: "National novels",
+                        domain: {row: 0, column: 2},
+                        direction: "clockwise",
+                        legendgroup: "group3"
+                        },
+                        ];
+                        
+                        var layout = {
+                        grid: {rows: 1, columns: 3},
+                        legend: {font: {size: 16}},
+                        annotations: [{
+                        text: "original",
+                        x: 0.09,
+                        y: 0.5,
+                        font: {size: 18},
+                        showarrow: false
+                        },{
+                        text: "American",
+                        x: 0.5,
+                        y: 0.5,
+                        font: {size: 18},
+                        showarrow: false
+                        },{
+                        text: "national",
+                        x: 0.91,
+                        y: 0.5,
+                        font: {size: 18},
+                        showarrow: false
+                        }
+                        ]
+                        };
+                        
+                        Plotly.newPlot('myDiv', data, layout);
+                    </script>
+                </body>
+            </html>
+        </xsl:result-document>
+        
+    </xsl:template>
+    
     
     <xsl:template name="label-combinations-identity">
         <!-- creates a csv file listing combinations of subgenre labels related to the 
@@ -5692,6 +5799,660 @@
                 </body>
             </html>
         </xsl:result-document>
+    </xsl:template>
+    
+    <xsl:template name="plot-novelas-originales-subgenre-theme">
+        <!-- creates a stacked bar plot showing the proportion of "novela original" vs. other for each of the 
+        major primary thematic subgenres -->
+        
+        <!-- thematic subgenres: novela histórica, novela sentimental, novela de costumbres, novela social, novela política -->
+        
+        <xsl:variable name="labels-x" select="('novela histórica','novela sentimental','novela de costumbres','novela social', 'novela política', 'other/unknown')"/>
+        <xsl:variable name="labels-y" select="('novela original', 'other')"/>
+        <xsl:variable name="works-y-original" select="$bibacme-works[.//term[@type='subgenre.summary.identity.explicit'][.='novela original']]"/>
+        <xsl:variable name="works-y-other" select="$bibacme-works[not(.//term[@type='subgenre.summary.identity.explicit'][.='novela original'])]"/>    
+        
+        <xsl:result-document href="{concat($output-dir,'subgenres-novela-original-by-subgenre-theme.html')}" method="html" encoding="UTF-8">
+            <html>
+                <head>
+                    <!-- Plotly.js -->
+                    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+                </head>
+                <body>
+                    <!-- Plotly chart will be drawn inside this DIV -->
+                    <div id="myDiv" style="width: 1000px; height: 600px;"></div>
+                    <script>
+                        <xsl:for-each select="$labels-y">
+                            <xsl:variable name="works-y" select="if (.='novela original') then $works-y-original else $works-y-other"/>
+                            var trace<xsl:value-of select="position()"/> = {
+                            type: "bar",
+                            name: "<xsl:value-of select="."/>",
+                            x: ["<xsl:value-of select="string-join($labels-x,'&quot;,&quot;')"/>"],
+                            y: [<xsl:for-each select="$labels-x">
+                                    <xsl:variable name="prim-sub" select="cligs:get-primary-labels($works-y, 'theme')"/>
+                                    <xsl:variable name="prim-sub-all" select="cligs:get-primary-labels($bibacme-works, 'theme')"/>
+                                    <xsl:choose>
+                                        <xsl:when test=".='other/unknown'">
+                                            <xsl:value-of select="count($prim-sub[not(. = $labels-x)]) div count($prim-sub-all[not(. = $labels-x)])"/>
+                                        </xsl:when>
+                                        <xsl:otherwise>
+                                            <xsl:value-of select="count($prim-sub[.=current()]) div count($prim-sub-all[.=current()])"/>
+                                        </xsl:otherwise>
+                                    </xsl:choose>
+                                    <xsl:if test="position()!=last()">,</xsl:if>
+                            </xsl:for-each>]
+                            };
+                        </xsl:for-each>
+                        
+                        var data = [<xsl:for-each select="$labels-y">
+                            <xsl:text>trace</xsl:text><xsl:value-of select="position()"/>
+                            <xsl:if test="position() != last()">,</xsl:if>
+                        </xsl:for-each>];
+                        var layout = {
+                        barmode: "stack",
+                        xaxis: {title: "subgenres (thematic)", tickfont: {size: 16}},
+                        yaxis: {title: "number of works", range: [0,1]},
+                        legend: {font: {size: 16}},
+                        font: {size: 16},
+                        margin: {b: 150}
+                        };
+                        Plotly.newPlot("myDiv", data, layout);
+                    </script>
+                </body>
+            </html>
+        </xsl:result-document>
+    
+    </xsl:template>
+    
+    <xsl:template name="plot-novelas-originales-subgenre-current">
+        <!-- creates a stacked bar plot showing the proportion of "novela original" vs. other for each of the 
+        literary currents -->
+        
+        <!-- currents: novela romántica, novela realista, novela naturalista, novela modernista, other/unknown -->
+        
+        <xsl:variable name="labels-x" select="('novela romántica','novela realista','novela naturalista','novela modernista', 'other/unknown')"/>
+        <xsl:variable name="labels-y" select="('novela original', 'other')"/>
+        <xsl:variable name="works-y-original" select="$bibacme-works[.//term[@type='subgenre.summary.identity.explicit'][.='novela original']]"/>
+        <xsl:variable name="works-y-other" select="$bibacme-works[not(.//term[@type='subgenre.summary.identity.explicit'][.='novela original'])]"/>    
+        
+        <xsl:result-document href="{concat($output-dir,'subgenres-novela-original-by-subgenre-current.html')}" method="html" encoding="UTF-8">
+            <html>
+                <head>
+                    <!-- Plotly.js -->
+                    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+                </head>
+                <body>
+                    <!-- Plotly chart will be drawn inside this DIV -->
+                    <div id="myDiv" style="width: 1000px; height: 600px;"></div>
+                    <script>
+                        <xsl:for-each select="$labels-y">
+                            <xsl:variable name="works-y" select="if (.='novela original') then $works-y-original else $works-y-other"/>
+                            var trace<xsl:value-of select="position()"/> = {
+                            type: "bar",
+                            name: "<xsl:value-of select="."/>",
+                            x: ["<xsl:value-of select="string-join($labels-x,'&quot;,&quot;')"/>"],
+                            y: [<xsl:for-each select="$labels-x">
+                                <xsl:variable name="prim-sub" select="cligs:get-primary-labels($works-y, 'current')"/>
+                                <xsl:variable name="prim-sub-all" select="cligs:get-primary-labels($bibacme-works, 'current')"/>
+                                <xsl:choose>
+                                    <xsl:when test=".='other/unknown'">
+                                        <xsl:value-of select="count($prim-sub[not(. = $labels-x)]) div count($prim-sub-all[not(. = $labels-x)])"/>
+                                    </xsl:when>
+                                    <xsl:otherwise>
+                                        <xsl:value-of select="count($prim-sub[.=current()]) div count($prim-sub-all[.=current()])"/>
+                                    </xsl:otherwise>
+                                </xsl:choose>
+                                <xsl:if test="position()!=last()">,</xsl:if>
+                            </xsl:for-each>]
+                            };
+                        </xsl:for-each>
+                        
+                        var data = [<xsl:for-each select="$labels-y">
+                            <xsl:text>trace</xsl:text><xsl:value-of select="position()"/>
+                            <xsl:if test="position() != last()">,</xsl:if>
+                        </xsl:for-each>];
+                        var layout = {
+                        barmode: "stack",
+                        xaxis: {title: "literary currents", tickfont: {size: 16}},
+                        yaxis: {title: "number of works", range: [0,1]},
+                        legend: {font: {size: 16}},
+                        font: {size: 16},
+                        margin: {b: 150}
+                        };
+                        Plotly.newPlot("myDiv", data, layout);
+                    </script>
+                </body>
+            </html>
+        </xsl:result-document>
+        
+    </xsl:template>
+    
+    <xsl:template name="plot-novelas-americanas-subgenre-theme">
+        <!-- creates a stacked bar plot showing the proportion of novelas americanas vs. other for each of the 
+        major primary thematic subgenres -->
+        
+        <!-- thematic subgenres: novela histórica, novela sentimental, novela de costumbres, novela social, novela política -->
+        
+        <xsl:variable name="labels-x" select="('novela histórica','novela sentimental','novela de costumbres','novela social', 'novela política', 'other/unknown')"/>
+        <xsl:variable name="labels-y" select="('novela americana', 'other')"/>
+        
+        <xsl:variable name="novelas-americanas" select="('novela americana','novela mexicana','novela cubana','novela argentina','novela criolla','novela bonaerense','novela porteña','novela habanera','novela yucateca','novela suriana','novela tapatía','novela india','novela mixteca','novela de Tabasco','novela azteca','novela camagüeyana','novela kantabro-americana', 'novela franco-argentina')"/>
+        
+        <xsl:variable name="works-y-american" select="$bibacme-works[.//term[@type='subgenre.summary.identity.explicit'][.=$novelas-americanas]]"/>
+        <xsl:variable name="works-y-other" select="$bibacme-works[not(.//term[@type='subgenre.summary.identity.explicit'][.=$novelas-americanas])]"/>    
+        
+        <xsl:result-document href="{concat($output-dir,'subgenres-novela-americana-by-subgenre-theme.html')}" method="html" encoding="UTF-8">
+            <html>
+                <head>
+                    <!-- Plotly.js -->
+                    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+                </head>
+                <body>
+                    <!-- Plotly chart will be drawn inside this DIV -->
+                    <div id="myDiv" style="width: 1000px; height: 600px;"></div>
+                    <script>
+                        <xsl:for-each select="$labels-y">
+                            <xsl:variable name="works-y" select="if (.='novela americana') then $works-y-american else $works-y-other"/>
+                            var trace<xsl:value-of select="position()"/> = {
+                            type: "bar",
+                            name: "<xsl:value-of select="."/>",
+                            x: ["<xsl:value-of select="string-join($labels-x,'&quot;,&quot;')"/>"],
+                            y: [<xsl:for-each select="$labels-x">
+                                <xsl:variable name="prim-sub" select="cligs:get-primary-labels($works-y, 'theme')"/>
+                                <xsl:variable name="prim-sub-all" select="cligs:get-primary-labels($bibacme-works, 'theme')"/>
+                                <xsl:choose>
+                                    <xsl:when test=".='other/unknown'">
+                                        <xsl:value-of select="count($prim-sub[not(. = $labels-x)]) div count($prim-sub-all[not(. = $labels-x)])"/>
+                                    </xsl:when>
+                                    <xsl:otherwise>
+                                        <xsl:value-of select="count($prim-sub[.=current()]) div count($prim-sub-all[.=current()])"/>
+                                    </xsl:otherwise>
+                                </xsl:choose>
+                                <xsl:if test="position()!=last()">,</xsl:if>
+                            </xsl:for-each>]
+                            };
+                        </xsl:for-each>
+                        
+                        var data = [<xsl:for-each select="$labels-y">
+                            <xsl:text>trace</xsl:text><xsl:value-of select="position()"/>
+                            <xsl:if test="position() != last()">,</xsl:if>
+                        </xsl:for-each>];
+                        var layout = {
+                        barmode: "stack",
+                        xaxis: {title: "subgenres (thematic)", tickfont: {size: 16}},
+                        yaxis: {title: "number of works", range: [0,1]},
+                        legend: {font: {size: 16}},
+                        font: {size: 16},
+                        margin: {b: 150}
+                        };
+                        Plotly.newPlot("myDiv", data, layout);
+                    </script>
+                </body>
+            </html>
+        </xsl:result-document>
+        
+    </xsl:template>
+    
+    <xsl:template name="plot-novelas-americanas-subgenre-current">
+        <!-- creates a stacked bar plot showing the proportion of novelas americanas vs. other for each of the 
+        literary currents -->
+        
+        <!-- currents: novela romántica, novela realista, novela naturalista, novela modernista, other/unknown -->
+        
+        <xsl:variable name="labels-x" select="('novela romántica','novela realista','novela naturalista','novela modernista', 'other/unknown')"/>
+        <xsl:variable name="labels-y" select="('novela americana', 'other')"/>
+        
+        <xsl:variable name="novelas-americanas" select="('novela americana','novela mexicana','novela cubana','novela argentina','novela criolla','novela bonaerense','novela porteña','novela habanera','novela yucateca','novela suriana','novela tapatía','novela india','novela mixteca','novela de Tabasco','novela azteca','novela camagüeyana','novela kantabro-americana', 'novela franco-argentina')"/>
+        
+        <xsl:variable name="works-y-american" select="$bibacme-works[.//term[@type='subgenre.summary.identity.explicit'][.=$novelas-americanas]]"/>
+        <xsl:variable name="works-y-other" select="$bibacme-works[not(.//term[@type='subgenre.summary.identity.explicit'][.=$novelas-americanas])]"/>    
+        
+        <xsl:result-document href="{concat($output-dir,'subgenres-novela-americana-by-subgenre-current.html')}" method="html" encoding="UTF-8">
+            <html>
+                <head>
+                    <!-- Plotly.js -->
+                    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+                </head>
+                <body>
+                    <!-- Plotly chart will be drawn inside this DIV -->
+                    <div id="myDiv" style="width: 1000px; height: 600px;"></div>
+                    <script>
+                        <xsl:for-each select="$labels-y">
+                            <xsl:variable name="works-y" select="if (.='novela americana') then $works-y-american else $works-y-other"/>
+                            var trace<xsl:value-of select="position()"/> = {
+                            type: "bar",
+                            name: "<xsl:value-of select="."/>",
+                            x: ["<xsl:value-of select="string-join($labels-x,'&quot;,&quot;')"/>"],
+                            y: [<xsl:for-each select="$labels-x">
+                                <xsl:variable name="prim-sub" select="cligs:get-primary-labels($works-y, 'current')"/>
+                                <xsl:variable name="prim-sub-all" select="cligs:get-primary-labels($bibacme-works, 'current')"/>
+                                <xsl:choose>
+                                    <xsl:when test=".='other/unknown'">
+                                        <xsl:value-of select="count($prim-sub[not(. = $labels-x)]) div count($prim-sub-all[not(. = $labels-x)])"/>
+                                    </xsl:when>
+                                    <xsl:otherwise>
+                                        <xsl:value-of select="count($prim-sub[.=current()]) div count($prim-sub-all[.=current()])"/>
+                                    </xsl:otherwise>
+                                </xsl:choose>
+                                <xsl:if test="position()!=last()">,</xsl:if>
+                            </xsl:for-each>]
+                            };
+                        </xsl:for-each>
+                        
+                        var data = [<xsl:for-each select="$labels-y">
+                            <xsl:text>trace</xsl:text><xsl:value-of select="position()"/>
+                            <xsl:if test="position() != last()">,</xsl:if>
+                        </xsl:for-each>];
+                        var layout = {
+                        barmode: "stack",
+                        xaxis: {title: "literary currents", tickfont: {size: 16}},
+                        yaxis: {title: "number of works", range: [0,1]},
+                        legend: {font: {size: 16}},
+                        font: {size: 16},
+                        margin: {b: 150}
+                        };
+                        Plotly.newPlot("myDiv", data, layout);
+                    </script>
+                </body>
+            </html>
+        </xsl:result-document>
+        
+    </xsl:template>
+    
+    <xsl:template name="plot-novelas-mexicanas-subgenre-theme">
+        <!-- creates a stacked bar plot showing the proportion of novelas mexicanas vs. other for each of the 
+        major primary thematic subgenres -->
+        
+        <!-- thematic subgenres: novela histórica, novela sentimental, novela de costumbres, novela social, novela política -->
+        
+        <xsl:variable name="labels-x" select="('novela histórica','novela sentimental','novela de costumbres','novela social', 'novela política', 'other/unknown')"/>
+        <xsl:variable name="labels-y" select="('novela mexicana', 'other')"/>
+        
+        <xsl:variable name="novelas-mexicanas" select="('novela mexicana','novela yucateca','novela suriana','novela tapatía','novela mixteca','novela de Tabasco','novela azteca')"/>
+        
+        <xsl:variable name="works-y-mexican" select="$bibacme-works[.//term[@type='subgenre.summary.identity.explicit'][.=$novelas-mexicanas]]"/>
+        <xsl:variable name="works-y-other" select="$bibacme-works[not(.//term[@type='subgenre.summary.identity.explicit'][.=$novelas-mexicanas])]"/>    
+        
+        <xsl:result-document href="{concat($output-dir,'subgenres-novela-mexicana-by-subgenre-theme.html')}" method="html" encoding="UTF-8">
+            <html>
+                <head>
+                    <!-- Plotly.js -->
+                    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+                </head>
+                <body>
+                    <!-- Plotly chart will be drawn inside this DIV -->
+                    <div id="myDiv" style="width: 1000px; height: 600px;"></div>
+                    <script>
+                        <xsl:for-each select="$labels-y">
+                            <xsl:variable name="works-y" select="if (.='novela mexicana') then $works-y-mexican else $works-y-other"/>
+                            var trace<xsl:value-of select="position()"/> = {
+                            type: "bar",
+                            name: "<xsl:value-of select="."/>",
+                            x: ["<xsl:value-of select="string-join($labels-x,'&quot;,&quot;')"/>"],
+                            y: [<xsl:for-each select="$labels-x">
+                                <xsl:variable name="prim-sub" select="cligs:get-primary-labels($works-y, 'theme')"/>
+                                <xsl:variable name="prim-sub-all" select="cligs:get-primary-labels($bibacme-works, 'theme')"/>
+                                <xsl:choose>
+                                    <xsl:when test=".='other/unknown'">
+                                        <xsl:value-of select="count($prim-sub[not(. = $labels-x)]) div count($prim-sub-all[not(. = $labels-x)])"/>
+                                    </xsl:when>
+                                    <xsl:otherwise>
+                                        <xsl:value-of select="count($prim-sub[.=current()]) div count($prim-sub-all[.=current()])"/>
+                                    </xsl:otherwise>
+                                </xsl:choose>
+                                <xsl:if test="position()!=last()">,</xsl:if>
+                            </xsl:for-each>]
+                            };
+                        </xsl:for-each>
+                        
+                        var data = [<xsl:for-each select="$labels-y">
+                            <xsl:text>trace</xsl:text><xsl:value-of select="position()"/>
+                            <xsl:if test="position() != last()">,</xsl:if>
+                        </xsl:for-each>];
+                        var layout = {
+                        barmode: "stack",
+                        xaxis: {title: "subgenres (thematic)", tickfont: {size: 16}},
+                        yaxis: {title: "number of works", range: [0,1]},
+                        legend: {font: {size: 16}},
+                        font: {size: 16},
+                        margin: {b: 150}
+                        };
+                        Plotly.newPlot("myDiv", data, layout);
+                    </script>
+                </body>
+            </html>
+        </xsl:result-document>
+        
+    </xsl:template>
+    
+    <xsl:template name="plot-novelas-mexicanas-subgenre-current">
+        <!-- creates a stacked bar plot showing the proportion of novelas mexicanas vs. other for each of the 
+        literary currents -->
+        
+        <!-- currents: novela romántica, novela realista, novela naturalista, novela modernista, other/unknown -->
+        
+        <xsl:variable name="labels-x" select="('novela romántica','novela realista','novela naturalista','novela modernista', 'other/unknown')"/>
+        <xsl:variable name="labels-y" select="('novela mexicana', 'other')"/>
+        
+        <xsl:variable name="novelas-mexicanas" select="('novela mexicana','novela yucateca','novela suriana','novela tapatía','novela mixteca','novela de Tabasco','novela azteca')"/>
+        
+        <xsl:variable name="works-y-mexican" select="$bibacme-works[.//term[@type='subgenre.summary.identity.explicit'][.=$novelas-mexicanas]]"/>
+        <xsl:variable name="works-y-other" select="$bibacme-works[not(.//term[@type='subgenre.summary.identity.explicit'][.=$novelas-mexicanas])]"/>    
+        
+        <xsl:result-document href="{concat($output-dir,'subgenres-novela-mexicana-by-subgenre-current.html')}" method="html" encoding="UTF-8">
+            <html>
+                <head>
+                    <!-- Plotly.js -->
+                    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+                </head>
+                <body>
+                    <!-- Plotly chart will be drawn inside this DIV -->
+                    <div id="myDiv" style="width: 1000px; height: 600px;"></div>
+                    <script>
+                        <xsl:for-each select="$labels-y">
+                            <xsl:variable name="works-y" select="if (.='novela mexicana') then $works-y-mexican else $works-y-other"/>
+                            var trace<xsl:value-of select="position()"/> = {
+                            type: "bar",
+                            name: "<xsl:value-of select="."/>",
+                            x: ["<xsl:value-of select="string-join($labels-x,'&quot;,&quot;')"/>"],
+                            y: [<xsl:for-each select="$labels-x">
+                                <xsl:variable name="prim-sub" select="cligs:get-primary-labels($works-y, 'current')"/>
+                                <xsl:variable name="prim-sub-all" select="cligs:get-primary-labels($bibacme-works, 'current')"/>
+                                <xsl:choose>
+                                    <xsl:when test=".='other/unknown'">
+                                        <xsl:value-of select="count($prim-sub[not(. = $labels-x)]) div count($prim-sub-all[not(. = $labels-x)])"/>
+                                    </xsl:when>
+                                    <xsl:otherwise>
+                                        <xsl:value-of select="count($prim-sub[.=current()]) div count($prim-sub-all[.=current()])"/>
+                                    </xsl:otherwise>
+                                </xsl:choose>
+                                <xsl:if test="position()!=last()">,</xsl:if>
+                            </xsl:for-each>]
+                            };
+                        </xsl:for-each>
+                        
+                        var data = [<xsl:for-each select="$labels-y">
+                            <xsl:text>trace</xsl:text><xsl:value-of select="position()"/>
+                            <xsl:if test="position() != last()">,</xsl:if>
+                        </xsl:for-each>];
+                        var layout = {
+                        barmode: "stack",
+                        xaxis: {title: "literary currents", tickfont: {size: 16}},
+                        yaxis: {title: "number of works", range: [0,1]},
+                        legend: {font: {size: 16}},
+                        font: {size: 16},
+                        margin: {b: 150}
+                        };
+                        Plotly.newPlot("myDiv", data, layout);
+                    </script>
+                </body>
+            </html>
+        </xsl:result-document>
+        
+    </xsl:template>
+    
+    <xsl:template name="plot-novelas-argentinas-subgenre-theme">
+        <!-- creates a stacked bar plot showing the proportion of novelas argentinas vs. other for each of the 
+        major primary thematic subgenres -->
+        
+        <!-- thematic subgenres: novela histórica, novela sentimental, novela de costumbres, novela social, novela política -->
+        
+        <xsl:variable name="labels-x" select="('novela histórica','novela sentimental','novela de costumbres','novela social', 'novela política', 'other/unknown')"/>
+        <xsl:variable name="labels-y" select="('novela argentina', 'other')"/>
+        
+        <xsl:variable name="novelas-argentinas" select="('novela argentina','novela bonaerense','novela porteña','novela franco-argentina')"/>
+        
+        <xsl:variable name="works-y-argentine" select="$bibacme-works[.//term[@type='subgenre.summary.identity.explicit'][.=$novelas-argentinas]]"/>
+        <xsl:variable name="works-y-other" select="$bibacme-works[not(.//term[@type='subgenre.summary.identity.explicit'][.=$novelas-argentinas])]"/>    
+        
+        <xsl:result-document href="{concat($output-dir,'subgenres-novela-argentina-by-subgenre-theme.html')}" method="html" encoding="UTF-8">
+            <html>
+                <head>
+                    <!-- Plotly.js -->
+                    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+                </head>
+                <body>
+                    <!-- Plotly chart will be drawn inside this DIV -->
+                    <div id="myDiv" style="width: 1000px; height: 600px;"></div>
+                    <script>
+                        <xsl:for-each select="$labels-y">
+                            <xsl:variable name="works-y" select="if (.='novela argentina') then $works-y-argentine else $works-y-other"/>
+                            var trace<xsl:value-of select="position()"/> = {
+                            type: "bar",
+                            name: "<xsl:value-of select="."/>",
+                            x: ["<xsl:value-of select="string-join($labels-x,'&quot;,&quot;')"/>"],
+                            y: [<xsl:for-each select="$labels-x">
+                                <xsl:variable name="prim-sub" select="cligs:get-primary-labels($works-y, 'theme')"/>
+                                <xsl:variable name="prim-sub-all" select="cligs:get-primary-labels($bibacme-works, 'theme')"/>
+                                <xsl:choose>
+                                    <xsl:when test=".='other/unknown'">
+                                        <xsl:value-of select="count($prim-sub[not(. = $labels-x)]) div count($prim-sub-all[not(. = $labels-x)])"/>
+                                    </xsl:when>
+                                    <xsl:otherwise>
+                                        <xsl:value-of select="count($prim-sub[.=current()]) div count($prim-sub-all[.=current()])"/>
+                                    </xsl:otherwise>
+                                </xsl:choose>
+                                <xsl:if test="position()!=last()">,</xsl:if>
+                            </xsl:for-each>]
+                            };
+                        </xsl:for-each>
+                        
+                        var data = [<xsl:for-each select="$labels-y">
+                            <xsl:text>trace</xsl:text><xsl:value-of select="position()"/>
+                            <xsl:if test="position() != last()">,</xsl:if>
+                        </xsl:for-each>];
+                        var layout = {
+                        barmode: "stack",
+                        xaxis: {title: "subgenres (thematic)", tickfont: {size: 16}},
+                        yaxis: {title: "number of works", range: [0,1]},
+                        legend: {font: {size: 16}},
+                        font: {size: 16},
+                        margin: {b: 150}
+                        };
+                        Plotly.newPlot("myDiv", data, layout);
+                    </script>
+                </body>
+            </html>
+        </xsl:result-document>
+        
+    </xsl:template>
+    
+    <xsl:template name="plot-novelas-argentinas-subgenre-current">
+        <!-- creates a stacked bar plot showing the proportion of novelas argentinas vs. other for each of the 
+        literary currents -->
+        
+        <!-- currents: novela romántica, novela realista, novela naturalista, novela modernista, other/unknown -->
+        
+        <xsl:variable name="labels-x" select="('novela romántica','novela realista','novela naturalista','novela modernista', 'other/unknown')"/>
+        <xsl:variable name="labels-y" select="('novela argentina', 'other')"/>
+        
+        <xsl:variable name="novelas-argentinas" select="('novela argentina','novela bonaerense','novela porteña','novela franco-argentina')"/>
+        
+        <xsl:variable name="works-y-argentine" select="$bibacme-works[.//term[@type='subgenre.summary.identity.explicit'][.=$novelas-argentinas]]"/>
+        <xsl:variable name="works-y-other" select="$bibacme-works[not(.//term[@type='subgenre.summary.identity.explicit'][.=$novelas-argentinas])]"/>    
+        
+        <xsl:result-document href="{concat($output-dir,'subgenres-novela-argentina-by-subgenre-current.html')}" method="html" encoding="UTF-8">
+            <html>
+                <head>
+                    <!-- Plotly.js -->
+                    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+                </head>
+                <body>
+                    <!-- Plotly chart will be drawn inside this DIV -->
+                    <div id="myDiv" style="width: 1000px; height: 600px;"></div>
+                    <script>
+                        <xsl:for-each select="$labels-y">
+                            <xsl:variable name="works-y" select="if (.='novela argentina') then $works-y-argentine else $works-y-other"/>
+                            var trace<xsl:value-of select="position()"/> = {
+                            type: "bar",
+                            name: "<xsl:value-of select="."/>",
+                            x: ["<xsl:value-of select="string-join($labels-x,'&quot;,&quot;')"/>"],
+                            y: [<xsl:for-each select="$labels-x">
+                                <xsl:variable name="prim-sub" select="cligs:get-primary-labels($works-y, 'current')"/>
+                                <xsl:variable name="prim-sub-all" select="cligs:get-primary-labels($bibacme-works, 'current')"/>
+                                <xsl:choose>
+                                    <xsl:when test=".='other/unknown'">
+                                        <xsl:value-of select="count($prim-sub[not(. = $labels-x)]) div count($prim-sub-all[not(. = $labels-x)])"/>
+                                    </xsl:when>
+                                    <xsl:otherwise>
+                                        <xsl:value-of select="count($prim-sub[.=current()]) div count($prim-sub-all[.=current()])"/>
+                                    </xsl:otherwise>
+                                </xsl:choose>
+                                <xsl:if test="position()!=last()">,</xsl:if>
+                            </xsl:for-each>]
+                            };
+                        </xsl:for-each>
+                        
+                        var data = [<xsl:for-each select="$labels-y">
+                            <xsl:text>trace</xsl:text><xsl:value-of select="position()"/>
+                            <xsl:if test="position() != last()">,</xsl:if>
+                        </xsl:for-each>];
+                        var layout = {
+                        barmode: "stack",
+                        xaxis: {title: "literary currents", tickfont: {size: 16}},
+                        yaxis: {title: "number of works", range: [0,1]},
+                        legend: {font: {size: 16}},
+                        font: {size: 16},
+                        margin: {b: 150}
+                        };
+                        Plotly.newPlot("myDiv", data, layout);
+                    </script>
+                </body>
+            </html>
+        </xsl:result-document>
+        
+    </xsl:template>
+    
+    <xsl:template name="plot-novelas-cubanas-subgenre-theme">
+        <!-- creates a stacked bar plot showing the proportion of novelas cubanas vs. other for each of the 
+        major primary thematic subgenres -->
+        
+        <!-- thematic subgenres: novela histórica, novela sentimental, novela de costumbres, novela social, novela política -->
+        
+        <xsl:variable name="labels-x" select="('novela histórica','novela sentimental','novela de costumbres','novela social', 'novela política', 'other/unknown')"/>
+        <xsl:variable name="labels-y" select="('novela cubana', 'other')"/>
+        
+        <xsl:variable name="novelas-cubanas" select="('novela cubana','novela habanera','novela camagüeyana')"/>
+        
+        <xsl:variable name="works-y-cuban" select="$bibacme-works[.//term[@type='subgenre.summary.identity.explicit'][.=$novelas-cubanas]]"/>
+        <xsl:variable name="works-y-other" select="$bibacme-works[not(.//term[@type='subgenre.summary.identity.explicit'][.=$novelas-cubanas])]"/>    
+        
+        <xsl:result-document href="{concat($output-dir,'subgenres-novela-cubana-by-subgenre-theme.html')}" method="html" encoding="UTF-8">
+            <html>
+                <head>
+                    <!-- Plotly.js -->
+                    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+                </head>
+                <body>
+                    <!-- Plotly chart will be drawn inside this DIV -->
+                    <div id="myDiv" style="width: 1000px; height: 600px;"></div>
+                    <script>
+                        <xsl:for-each select="$labels-y">
+                            <xsl:variable name="works-y" select="if (.='novela cubana') then $works-y-cuban else $works-y-other"/>
+                            var trace<xsl:value-of select="position()"/> = {
+                            type: "bar",
+                            name: "<xsl:value-of select="."/>",
+                            x: ["<xsl:value-of select="string-join($labels-x,'&quot;,&quot;')"/>"],
+                            y: [<xsl:for-each select="$labels-x">
+                                <xsl:variable name="prim-sub" select="cligs:get-primary-labels($works-y, 'theme')"/>
+                                <xsl:variable name="prim-sub-all" select="cligs:get-primary-labels($bibacme-works, 'theme')"/>
+                                <xsl:choose>
+                                    <xsl:when test=".='other/unknown'">
+                                        <xsl:value-of select="count($prim-sub[not(. = $labels-x)]) div count($prim-sub-all[not(. = $labels-x)])"/>
+                                    </xsl:when>
+                                    <xsl:otherwise>
+                                        <xsl:value-of select="count($prim-sub[.=current()]) div count($prim-sub-all[.=current()])"/>
+                                    </xsl:otherwise>
+                                </xsl:choose>
+                                <xsl:if test="position()!=last()">,</xsl:if>
+                            </xsl:for-each>]
+                            };
+                        </xsl:for-each>
+                        
+                        var data = [<xsl:for-each select="$labels-y">
+                            <xsl:text>trace</xsl:text><xsl:value-of select="position()"/>
+                            <xsl:if test="position() != last()">,</xsl:if>
+                        </xsl:for-each>];
+                        var layout = {
+                        barmode: "stack",
+                        xaxis: {title: "subgenres (thematic)", tickfont: {size: 16}},
+                        yaxis: {title: "number of works", range: [0,1]},
+                        legend: {font: {size: 16}},
+                        font: {size: 16},
+                        margin: {b: 150}
+                        };
+                        Plotly.newPlot("myDiv", data, layout);
+                    </script>
+                </body>
+            </html>
+        </xsl:result-document>
+        
+    </xsl:template>
+    
+    <xsl:template name="plot-novelas-cubanas-subgenre-current">
+        <!-- creates a stacked bar plot showing the proportion of novelas cubanas vs. other for each of the 
+        literary currents -->
+        
+        <!-- currents: novela romántica, novela realista, novela naturalista, novela modernista, other/unknown -->
+        
+        <xsl:variable name="labels-x" select="('novela romántica','novela realista','novela naturalista','novela modernista', 'other/unknown')"/>
+        <xsl:variable name="labels-y" select="('novela cubana', 'other')"/>
+        
+        <xsl:variable name="novelas-cubanas" select="('novela cubana','novela habanera','novela camagüeyana')"/>
+        
+        <xsl:variable name="works-y-cuban" select="$bibacme-works[.//term[@type='subgenre.summary.identity.explicit'][.=$novelas-cubanas]]"/>
+        <xsl:variable name="works-y-other" select="$bibacme-works[not(.//term[@type='subgenre.summary.identity.explicit'][.=$novelas-cubanas])]"/>    
+        
+        <xsl:result-document href="{concat($output-dir,'subgenres-novela-cubana-by-subgenre-current.html')}" method="html" encoding="UTF-8">
+            <html>
+                <head>
+                    <!-- Plotly.js -->
+                    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+                </head>
+                <body>
+                    <!-- Plotly chart will be drawn inside this DIV -->
+                    <div id="myDiv" style="width: 1000px; height: 600px;"></div>
+                    <script>
+                        <xsl:for-each select="$labels-y">
+                            <xsl:variable name="works-y" select="if (.='novela cubana') then $works-y-cuban else $works-y-other"/>
+                            var trace<xsl:value-of select="position()"/> = {
+                            type: "bar",
+                            name: "<xsl:value-of select="."/>",
+                            x: ["<xsl:value-of select="string-join($labels-x,'&quot;,&quot;')"/>"],
+                            y: [<xsl:for-each select="$labels-x">
+                                <xsl:variable name="prim-sub" select="cligs:get-primary-labels($works-y, 'current')"/>
+                                <xsl:variable name="prim-sub-all" select="cligs:get-primary-labels($bibacme-works, 'current')"/>
+                                <xsl:choose>
+                                    <xsl:when test=".='other/unknown'">
+                                        <xsl:value-of select="count($prim-sub[not(. = $labels-x)]) div count($prim-sub-all[not(. = $labels-x)])"/>
+                                    </xsl:when>
+                                    <xsl:otherwise>
+                                        <xsl:value-of select="count($prim-sub[.=current()]) div count($prim-sub-all[.=current()])"/>
+                                    </xsl:otherwise>
+                                </xsl:choose>
+                                <xsl:if test="position()!=last()">,</xsl:if>
+                            </xsl:for-each>]
+                            };
+                        </xsl:for-each>
+                        
+                        var data = [<xsl:for-each select="$labels-y">
+                            <xsl:text>trace</xsl:text><xsl:value-of select="position()"/>
+                            <xsl:if test="position() != last()">,</xsl:if>
+                        </xsl:for-each>];
+                        var layout = {
+                        barmode: "stack",
+                        xaxis: {title: "literary currents", tickfont: {size: 16}},
+                        yaxis: {title: "number of works", range: [0,1]},
+                        legend: {font: {size: 16}},
+                        font: {size: 16},
+                        margin: {b: 150}
+                        };
+                        Plotly.newPlot("myDiv", data, layout);
+                    </script>
+                </body>
+            </html>
+        </xsl:result-document>
+        
     </xsl:template>
     
     

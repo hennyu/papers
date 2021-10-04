@@ -20,7 +20,7 @@ stylo_path = join(wdir, "stylo")
 # move files to secondary_set for stylo
 
 md = pd.read_csv(join(wdir, "metadata.csv"), index_col=0)
-idnos_secondary_set = md.loc[md["subgenre-novela-original"]=="none"].index
+idnos_secondary_set = md.loc[md["subgenre-novela-cubana"]=="none"].index
 
 for idno in idnos_secondary_set:
 	filename = idno + ".txt"
